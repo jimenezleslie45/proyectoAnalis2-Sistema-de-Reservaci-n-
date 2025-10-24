@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login - Sistema de Reservas</title>
+  <style>
+    @keyframes glow {
+      0% { box-shadow: 0 0 15px rgba(4,217,255,0.6),0 0 35px rgba(4,217,255,0.4),0 0 60px rgba(4,217,255,0.2); }
+      50% { box-shadow: 0 0 25px rgba(4,217,255,0.8),0 0 45px rgba(4,217,255,0.6),0 0 70px rgba(4,217,255,0.4); }
+      100% { box-shadow: 0 0 15px rgba(4,217,255,0.6),0 0 35px rgba(4,217,255,0.4),0 0 60px rgba(4,217,255,0.2); }
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background-color: #0f1115;
+      background-image: radial-gradient(circle at top, #001f2b 0%, #000 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #e0e0e0;
+    }
+
+    .login-card {
+      background-color: rgba(0,0,0,0.5);
+      backdrop-filter: blur(12px);
+      padding: 40px;
+      border-radius: 15px;
+      border: 2px solid #04d9ff;
+      animation: glow 3s infinite ease-in-out;
+      text-align: center;
+      max-width: 340px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      color: #04d9ff;
+      margin-bottom: 25px;
+      font-size: 1.8em;
+    }
+
+    .input {
+      width: 100%;
+      padding: 14px 18px;
+      margin-bottom: 16px;
+      border: 1px solid #333;
+      border-radius: 8px;
+      background-color: rgba(0,0,0,0.4);
+      color: #e0e0e0;
+      font-size: 1em;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .input::placeholder {
+      color: #888;
+    }
+
+    .input:focus {
+      border-color: #04d9ff;
+      box-shadow: 0 0 10px rgba(4,217,255,0.4);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      background-color: #04d9ff;
+      color: #111;
+      font-weight: bold;
+      font-size: 1.1em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #00bfff;
+      transform: translateY(-2px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .msg {
+      margin-top: 15px;
+      font-size: 0.9em;
+      color: #aaa;
+      min-height: 20px;
+    }
+
+    .error { color: #ff6b6b; }
+    .success { color: #04d9ff; }
+
+    .footer {
+      margin-top: 20px;
+      font-size: 0.8em;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <h1>Iniciar Sesión</h1>
+    <form id="loginForm" onsubmit="return doLogin(event)">
+      <input class="input" id="username" name="username" placeholder="Usuario" required />
+      <input class="input" id="password" name="password" type="password" placeholder="Contraseña" required />
+      <button class="btn" type="submit">Entrar</button>
+      <div id="msg" class="msg"></div>
+    </form>
+    <div class="footer">© 2025 Sistema de Reservas de Laboratorio</div>
+  </div>
+
+  <script>
+    // URL del backend FastAPI
+    const API_URL = "http://localhost:8000/auth/token";
+    const FRONTEND_URL = "http://localhost:5173"; // redirección al panel React
+
+    async function doLogin(e) {
+      e.preventDefault();
+
+      const u = document.getElementById("username").value;
+      const p = document.getElementById("password").value;
+      const msg = document.getElementById("msg");
+
+      msg.textContent = "Validando credenciales...";
+      msg.className = "msg";
+
+      const body = new URLSearchParams();
+      body.append("username", u);
+      body.append("password", p);
+
+      try {
+        const resp = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body,
+        });
+
+        if (!resp.ok) {
+          const errData = await resp.json().catch(() => ({}));
+          throw new Error(errData.detail || "Usuario o contraseña incorrectos");
+        }
+
+        const data = await resp.json();
+        const token = data.access_token;
+
+        // Guarda el token JWT en localStorage
+        localStorage.setItem("jwt_token", token);
+        msg.textContent = "✅ Inicio de sesión correcto. Redirigiendo...";
+        msg.className = "msg success";
+
+        // Redirige al panel React
+        setTimeout(() => {
+          window.location.href = FRONTEND_URL;
+        }, 1000);
+
+      } catch (err) {
+        msg.textContent = "❌ Error: " + err.message;
+        msg.className = "msg error";
+      }
+      return false;
+    }
+  </script>
+</body>
+</html>

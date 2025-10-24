@@ -1,0 +1,38 @@
+:root{ --neon-blue: #00f0ff; }
+
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: linear-gradient(180deg,#0b1220 0%, #08101a 100%);
+  font-family: Inter, system-ui, Arial, sans-serif;
+}
+
+.login-card{
+  width:360px;
+  padding:28px;
+  background: rgba(255,255,255,0.96);
+  border-radius: 28px;
+  box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  align-items:stretch;
+}
+
+.login-card h1{ margin:0; font-size:20px; color:#071022; text-align:center; }
+
+.input{ padding:10px 12px; border-radius:12px; border:1px solid rgba(10,20,30,0.08); outline:none; font-size:14px; }
+
+.btn{ background: linear-gradient(90deg,var(--neon-blue), #2af6ff 60%); color:#02121a; font-weight:600; padding:10px 12px; border:none; border-radius:12px; cursor:pointer; box-shadow:0 6px 18px rgba(0,240,255,0.12); }
+
+.jwt-badge{ display:inline-block; padding:8px 12px; background: rgba(0,0,0,0.62); color:#e6f8ff; border-radius:14px; position:relative; font-family: ui-monospace, monospace; font-size:13px; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; box-shadow: 0 8px 20px rgba(0,0,0,0.5); }
+
+.jwt-badge::before, .jwt-badge::after{ content:""; position:absolute; width:14px; height:14px; background: var(--neon-blue); border-radius:50%; top:-6px; box-shadow: 0 0 18px rgba(0,240,255,0.85); filter:drop-shadow(0 3px 8px rgba(0,240,255,0.25)); }
+
+.jwt-badge::before{ left:-6px; transform: rotate(18deg); } 
+.jwt-badge::after{ right:-6px; transform: rotate(-18deg); }
+
+.jwt-wrap{ overflow-x:auto; padding-top:6px; }

@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: reservas
+    volumes:
+      # Usamos el nombre de tu volumen actual
+      - postgres_data_v3:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  # --- ¡1. NUEVO SERVICIO DE CACHE! ---
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  app:
+    build: .
+    restart: always
+    depends_on:
+      - db
+      - redis # <-- 2. La app ahora también depende de Redis
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@db:5432/reservas
+      # --- ¡3. NUEVA VARIABLE DE ENTORNO PARA REDIS! ---
+      - REDIS_URL=redis://redis:6379
+      - PYTHONPATH=/app
+    volumes:
+      - ./:/app
+    ports:
+      - "8000:8000"
+    command: >
+      sh -c "uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /app"
+
+volumes:
+  # Usamos el nombre de tu volumen actual
+  postgres_data_v3:
