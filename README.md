@@ -31,7 +31,7 @@ Base de Datos Relacional: Persistencia de información en PostgreSQL.
 
 Contenerización: Backend ejecutado dentro de Docker para entornos controlados.
 
-🌟 Extensiones Avanzadas (Bonus)
+🌟 Extensiones Avanzadas (Bonus) si logramos hacer esos  bonus
 
 🔐 Autenticación JWT: Control de acceso seguro mediante tokens.
 
