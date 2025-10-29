@@ -10,9 +10,12 @@ import {
   FaCogs,
   FaSignOutAlt,
   FaBars,
+  FaMicroscope,
+  FaRobot,
   FaFlask as LabIcon,
 } from "react-icons/fa";
 
+// 🔹 Lista de opciones del menú lateral
 const items = [
   { id: "panel", label: "Panel", icon: <FaTachometerAlt /> },
   { id: "reservas", label: "Reservas", icon: <FaCalendarCheck /> },
@@ -20,19 +23,26 @@ const items = [
   { id: "salas", label: "Salas", icon: <FaBuilding /> },
   { id: "usuarios", label: "Usuarios", icon: <FaUsers /> },
   { id: "informes", label: "Informes", icon: <FaChartBar /> },
+
+  // 🧠 Sección Inteligencia Artificial
+  { id: "analisis", label: "Análisis (IA)", icon: <FaMicroscope /> }, // IA estadística
+  { id: "ia", label: "Sugerencia IA", icon: <FaRobot /> }, // IA con OpenAI
+
   { id: "calendario", label: "Calendario", icon: <FaCalendarAlt /> },
   { id: "config", label: "Configuraciones", icon: <FaCogs /> },
 ];
 
-export default function Sidebar({ collapsed, onToggle, onSelect, current }) {
+export default function Sidebar({ collapsed, onToggle, onSelect, current, onLogout }) {
   return (
     <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
+      {/* Encabezado */}
       <div className="brand">
         <div className="brand-logo"><LabIcon /></div>
         {!collapsed && <div className="brand-text">Laboratorio</div>}
         <button className="burger" onClick={onToggle}><FaBars /></button>
       </div>
 
+      {/* Navegación */}
       <nav className="menu">
         {items.map((it) => (
           <button
@@ -47,8 +57,9 @@ export default function Sidebar({ collapsed, onToggle, onSelect, current }) {
         ))}
       </nav>
 
+      {/* Cierre de sesión */}
       <div className="logout">
-        <button className="menu-item danger" type="button">
+        <button className="menu-item danger" type="button" onClick={onLogout}>
           <span className="menu-icon"><FaSignOutAlt /></span>
           {!collapsed && <span className="menu-text">Cerrar sesión</span>}
         </button>

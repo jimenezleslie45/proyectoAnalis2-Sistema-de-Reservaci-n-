@@ -1,42 +1,93 @@
-version: "3.8"
+version: "3.9"
 
 services:
+  # =============================
+  # 🧠 BACKEND FASTAPI + IA (OpenAI)
+  # =============================
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: reservas-backend
+    env_file:
+      - .env  # Carga todas las variables desde el archivo .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+    environment:
+      # 🔐 IA de pago (OpenAI)
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_MODEL=${OPENAI_MODEL}
+      # 🌐 CORS permitido para el frontend
+      - CORS_ORIGINS=${CORS_ORIGINS}
+      # 🗄️ Conexión a la base de datos
+      - DATABASE_URL=${DATABASE_URL}
+      # ⚙️ Redis
+      - REDIS_URL=${REDIS_URL}
+      # 🔐 JWT
+      - SECRET_KEY=${SECRET_KEY}
+      - ALGORITHM=${ALGORITHM}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}
+    restart: always
+    command: >
+      uvicorn app.main:app
+      --host 0.0.0.0
+      --port 8000
+      --reload
+
+  # =============================
+  # 🗄️ BASE DE DATOS POSTGRES
+  # =============================
   db:
-    image: postgres:13
+    image: postgres:15-alpine
+    container_name: reservas-db
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       POSTGRES_DB: reservas
-    volumes:
-      # Usamos el nombre de tu volumen actual
-      - postgres_data_v3:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
 
-  # --- ¡1. NUEVO SERVICIO DE CACHE! ---
+  # =============================
+  # ⚡ REDIS (CACHE / COLAS)
+  # =============================
   redis:
     image: redis:alpine
+    container_name: reservas-redis
     ports:
       - "6379:6379"
-
-  app:
-    build: .
     restart: always
-    depends_on:
-      - db
-      - redis # <-- 2. La app ahora también depende de Redis
-    environment:
-      - DATABASE_URL=postgresql://postgres:password@db:5432/reservas
-      # --- ¡3. NUEVA VARIABLE DE ENTORNO PARA REDIS! ---
-      - REDIS_URL=redis://redis:6379
-      - PYTHONPATH=/app
-    volumes:
-      - ./:/app
-    ports:
-      - "8000:8000"
-    command: >
-      sh -c "uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /app"
 
+  # =============================
+  # 💻 FRONTEND REACT (VITE)
+  # =============================
+  frontend:
+    build:
+      context: ./app/schemas/frontend
+      dockerfile: Dockerfile
+    container_name: reservas-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./app/schemas/frontend:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true   # 👈 Evita errores de hot-reload en Windows
+      - WDS_SOCKET_PORT=5173
+      - VITE_API_URL=${VITE_API_URL}  # 👈 Conecta el frontend al backend
+    depends_on:
+      - backend
+    restart: always
+
+# =============================
+# 📦 VOLUMENES PERSISTENTES
+# =============================
 volumes:
-  # Usamos el nombre de tu volumen actual
-  postgres_data_v3:
+  postgres_data:

@@ -1,141 +1,109 @@
-🧪 Sistema de Reservas de Laboratorio
+🧪 Sistema de Reservas de Laboratorio (con IA OpenAI)
 
 Este proyecto es una aplicación web completa diseñada para optimizar la gestión de reservas en laboratorios académicos o institucionales.
-Combina un backend robusto en FastAPI con un frontend moderno e interactivo en React, brindando una experiencia fluida tanto para los usuarios como para los administradores.
+Combina un backend robusto en FastAPI, un frontend moderno en React (Vite) y un módulo de Inteligencia Artificial para análisis y recomendaciones automáticas.
 
 🧱 Arquitectura del Sistema
+🔹 Backend (FastAPI + PostgreSQL + Redis + OpenAI)
 
-El sistema está compuesto por dos grandes módulos:
+Gestiona toda la lógica del negocio: autenticación, reservas, auditorías y conexión con IA.
 
-🔹 Backend (API REST)
+Totalmente contenerizado con Docker.
 
-Desarrollado con FastAPI, gestiona toda la lógica de negocio: autenticación, operaciones CRUD, auditoría y comunicación con la base de datos PostgreSQL.
-Está completamente contenerizado con Docker, lo que facilita su despliegue y portabilidad.
+Compatible con GPT-4o-mini de OpenAI para análisis predictivo y chat inteligente.
 
-🔹 Frontend (Aplicación Web)
+🔹 Frontend (React + Vite)
 
-Construido con React y potenciado por Vite, ofrece una interfaz intuitiva, rápida y dinámica que consume los servicios del backend.
-Permite visualizar, crear y administrar reservas de forma sencilla.
+Interfaz moderna, rápida e intuitiva.
+
+Consume los endpoints del backend y muestra estadísticas, gráficas y respuestas IA.
 
 🚀 Funcionalidades Principales
-
-El sistema cumple con los requisitos fundamentales y, además, incorpora extensiones avanzadas que fortalecen su rendimiento y seguridad.
-
 ⚙️ Funcionalidades Base
 
-Gestión de Usuarios: Registro, inicio de sesión y autenticación segura.
+Gestión de usuarios (registro y autenticación JWT).
 
-CRUD de Reservas: Crear, leer, actualizar y eliminar reservas fácilmente.
+CRUD completo de reservas de laboratorio.
 
-Base de Datos Relacional: Persistencia de información en PostgreSQL.
+Persistencia en PostgreSQL.
 
-Contenerización: Backend ejecutado dentro de Docker para entornos controlados.
+Contenerización total con Docker y Docker Compose.
 
-🌟 Extensiones Avanzadas (Bonus) si logramos hacer esos  bonus
+Cache con Redis para mejorar rendimiento.
 
-🔐 Autenticación JWT: Control de acceso seguro mediante tokens.
+🌟 Extensiones Avanzadas
 
-🔎 Filtros y Búsqueda: Permite filtrar reservas por laboratorio o fecha.
+🔐 Autenticación JWT.
 
-📄 Paginación: Las consultas grandes se dividen en páginas para optimizar el rendimiento.
+📊 Análisis de uso de laboratorios.
 
-🗑️ Soft Delete: Las reservas se marcan como inactivas, manteniendo el historial sin pérdida de datos.
+🧠 IA integrada con OpenAI (GPT-4o-mini).
 
-🧾 Auditoría: Se registra cada acción de creación, modificación o eliminación.
+🗑️ Soft delete y auditoría de acciones.
 
-⚡ Cache con Redis: Mejora la velocidad de respuesta almacenando datos temporalmente.
+⚡ Paginación y filtros dinámicos.
 
-🧪 Tests Unitarios: Implementados con pytest para garantizar la calidad del código.
+🧪 Tests automáticos con Pytest.
 
-🗂️ Estructura del Proyecto (Backend)
-sistema-de-reserva-de-laboratorio/
-│
-├── alembic/
-│   └── versions/
-│
-├── app/
-│   ├── api/
-│   │   └── v1/
-│   │       ├── endpoints/
-│   │       │   ├── __init__.py
-│   │       │   ├── audit.py
-│   │       │   ├── auth.py
-│   │       │   ├── deps.py
-│   │       │   ├── labs.py
-│   │       │   ├── reservations.py
-│   │       │   └── users.py
-│   │       └── __init__.py
-│   │
+🧠 Módulo de Inteligencia Artificial
+🔸 Chat Inteligente (/ai/chat-ia)
+
+Usa OpenAI GPT-4o-mini para responder preguntas sobre las reservas:
+
+{
+  "question": "¿Qué laboratorio tiene más reservas esta semana?"
+}
+
+
+➡️ El sistema genera respuestas en español, basadas en tus datos reales.
+
+🔸 Sugerencia Inteligente (/ai/sugerir)
+
+Algoritmo interno predictivo que sugiere el mejor laboratorio y hora disponible.
+Ideal para automatizar decisiones de reserva.
+
+🧩 Estructura del Proyecto
+🧠 Backend (FastAPI)
+app/
+├── api/
+│   ├── v1/
+│   │   ├── endpoints/
+│   │   │   ├── auth.py
+│   │   │   ├── reservations.py
+│   │   │   ├── audit.py
+│   │   │   └── users.py
+│   │   ├── ai.py              # ✅ Nuevo módulo IA (GPT-4o-mini)
+│   │   └── __init__.py
 │   ├── core/
-│   │   ├── cache.py
-│   │   ├── config.py
-│   │   └── security.py
-│   │
 │   ├── crud/
-│   │   ├── __init__.py
-│   │   ├── audit_log.py
-│   │   ├── reservation.py
-│   │   └── user.py
-│   │
 │   ├── db/
-│   │   ├── __init__.py
-│   │   ├── base.py
-│   │   └── session.py
-│   │
 │   ├── models/
-│   │   ├── __init__.py
-│   │   ├── audit_log.py
-│   │   ├── reservation.py
-│   │   └── user.py
-│   │
 │   ├── schemas/
-│   │   ├── __init__.py
-│   │   ├── audit_log.py
-│   │   ├── reservation.py
-│   │   └── user.py
-│   │
-│   ├── static/
-│   │   └── auth.css
-│   │
-│   ├── templates/
-│   │   └── login.html
-│   │
 │   ├── utils/
-│   │   ├── __init__.py
-│   │   ├── pagination.py
-│   │   └── main.py
-│   │
+│   ├── main.py
 │   └── tests/
-│       ├── confest.py
-│       ├── test_audit.py          # ✅ Pruebas del registro de auditoría
-│       └── test_reservations.py
-│
-├── .env.example
-├── docker-compose.yml
-├── Dockerfile
-├── requirements.txt
-└── README.md
+│       ├── test_reservations.py
+│       └── test_ai.py         # ✅ Test de conexión IA (opcional)
 
-💻 Estructura del Proyecto (Frontend)
-frontend-reservas/
-├── public/               # Archivos estáticos
+💻 Frontend (React + Vite)
+app/schemas/frontend/
 ├── src/
-│   ├── assets/           # Estilos, imágenes y recursos
-│   ├── components/       # Componentes reutilizables (Sidebar, StatCard, etc.)
-│   ├── pages/            # Páginas completas (LoginPage, Dashboard, etc.)
-│   ├── App.jsx           # Lógica principal y enrutamiento
-│   └── main.jsx          # Punto de entrada de la aplicación
-├── .gitignore
-├── index.html
+│   ├── App.jsx
+│   ├── components/
+│   │   ├── Sidebar.jsx
+│   │   └── AISugerencia.jsx   # ✅ Nuevo componente de IA
+│   ├── assets/
+│   └── styles/
+├── public/
 ├── package.json
 └── vite.config.js
 
-🧰 Tech Stack
-🔸 Backend
+
+🧰 Pila tecnológica 🔸 Backend
 
 Python 3.9
 
-FastAPI
+API rápida
 
 PostgreSQL
 
@@ -143,15 +111,15 @@ SQLAlchemy
 
 Pydantic
 
-Uvicorn
+Uvicornio
 
 Redis
 
-Docker & Docker Compose
+Docker y Docker Compose
 
 🔹 Frontend
 
-React
+Reaccionar
 
 Vite
 
@@ -159,60 +127,51 @@ Framer Motion (animaciones)
 
 Chart.js (visualización de datos)
 
-⚙️ Instalación y Ejecución
-🔧 Prerrequisitos
+⚙️ Instalación y Ejecución 🔧 Prerrequisitos
 
 Tener Docker y Docker Compose instalados y corriendo.
 
-Tener Node.js y npm (o yarn) para el frontend.
+Tener Node.js y npm (o hilo) para el frontend.
 
 🚀 Pasos para ejecutar
 
 Clonar el repositorio
 
-git clone <URL_DEL_REPOSITORIO>
-cd sistema-reservas-laboratorio
-
+git clone <URL_DEL_REPOSITORIO> cd sistema-reservas-laboratorio
 
 Levantar el Backend
 
-docker compose up --build -d
-
+docker compone --build -d
 
 Ejecutar el Frontend
 
-cd frontend-reservas
-npm install
-npm run dev
-
+cd frontend-reservas npm install npm run dev
 
 Accesos
+Acceder
 
-API: http://localhost:8000
+🌐 Frontend: http://localhost:5173
 
-Swagger Docs: http://localhost:8000/docs
+⚙️ API Docs (Swagger): http://localhost:8000/docs
 
-Frontend: http://localhost:5173
+🧠 IA Chat: POST /ai/chat-ia
 
-🧪 Cómo Usar y Probar la Aplicación
-
-Registrar un Usuario
-Desde Swagger (/auth/register) o el frontend.
-
-Iniciar Sesión
-Obtén tu access_token JWT.
-
-Conectar el Frontend
-Si usas un token fijo para desarrollo, colócalo en la variable TOKEN_FIJO del archivo App.jsx.
-
-Crear Reservas
-Desde el frontend o directamente en /reservations/.
-
-🧾 Pruebas Unitarias
-
-Para ejecutar las pruebas:
-
-docker compose exec app pytest
+🔍 Sugerencias IA: GET /ai/sugerir
 
 
-Esto ejecutará los tests definidos en tests/test_reservations.py y tests/test_audit.py.
+🧪 Cómo usar y probar la aplicación
+
+Registre un usuario desde Swagger (/auth/register) o el frontend.
+
+Iniciar sesión Obtenga su access_token JWT.
+
+Conectar el Frontend Si usas un token fijo para desarrollo, colócalo en la variable TOKEN_FIJO del archivo App.jsx.
+
+Crear Reservas Desde el frontend o directamente en /reservas/.
+
+
+Ejecutar pruebas unitarias desde el contenedor:
+
+docker compose exec backend pytest
+
+Esto ejecutará las pruebas definidas en tests/test_reservations.py y tests/test_audit.py.

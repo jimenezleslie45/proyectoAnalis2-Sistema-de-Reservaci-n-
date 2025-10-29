@@ -1,24 +1,47 @@
 /* --- IMPORTACIÓN DE FUENTE --- */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-:root {
-  /* --- PALETA DE COLOR "DARK MODE" --- */
-  --primary: #5b7bff;
-  --primary-accent: #5a3ef0;
-  --primary-dark: #4e35d0;
-  
-  /* --- COLORES BASE OSCUROS --- */
-  --bg: #111827;              /* Fondo principal (Gris-Azul 900) */
-  --card-bg: #1f2937;         /* Fondo de tarjetas (Gris-Azul 800) */
-  --border-color: #374151;    /* Bordes (Gris-Azul 700) */
+/* --- KEYFRAMES PARA ANIMACIÓN NEÓN --- */
+@keyframes neon-text-pulse {
+  0%, 100% {
+    /* Sombra de texto: interior blanca, exterior de color */
+    text-shadow: 0 0 4px #fff, 0 0 8px var(--primary), 0 0 12px var(--primary);
+  }
+  50% {
+    text-shadow: 0 0 6px #fff, 0 0 12px var(--primary), 0 0 18px var(--primary);
+  }
+}
 
-  --text: #e5e7eb;            /* Texto principal (Gris 200) */
-  --muted: #9ca3af;           /* Texto secundario (Gris 400) */
+@keyframes modal-fade-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+
+:root {
+  /* --- PALETA DE COLOR "NEON DARK" --- */
+  --primary: #00e5ff;        /* Cian Neón */
+  --primary-accent: #ff00a0;   /* Magenta Neón */
+  --primary-dark: #d10086;     /* Magenta Oscuro (para hover) */
+  
+  /* Colores Neón para Botones */
+  --success-neon: #39ff14;    /* Verde Neón */
+  --warning-neon: #f0ff00;    /* Amarillo Neón */
+  --danger-neon: #ff1b00;     /* Rojo-Naranja Neón */
+
+  /* --- COLORES BASE NEGRO PURO --- */
+  --bg: #000000;              /* Fondo negro puro */
+  --card-bg: #111111;          /* Fondo de tarjetas (gris muy oscuro) */
+  --border-color: #2a2a2a;      /* Bordes (gris oscuro) */
+
+  --text: #f0f0f0;            /* Texto principal (casi blanco) */
+  --muted: #888888;           /* Texto secundario (gris) */
   
   /* --- RECURSOS DEL TEMA --- */
-  --sidebar-grad: var(--card-bg); /* Sidebar sólido oscuro */
+  --sidebar-grad: var(--card-bg); 
   --card-radius: 16px;
-  --shadow: none; /* Las sombras se reemplazan por bordes en dark mode */
+  /* Sombra Neón para "pop" */
+  --shadow: 0 0 12px rgba(0, 229, 255, 0.15); 
 }
 
 /* --- Layout general MODIFICADO --- */
@@ -49,7 +72,7 @@ body {
   position: sticky;
   top: 0;
   height: 100vh;
-  box-shadow: var(--shadow);
+  box-shadow: none; /* Quitamos sombra, usamos borde */
   border-right: 1px solid var(--border-color); /* Borde para separación */
   transition: width .25s ease;
 }
@@ -63,7 +86,11 @@ body {
 .brand-logo {
   width: 42px; height: 42px; border-radius: 12px;
   display: grid; place-content: center;
-  font-weight: 700; background: #ffffff1a; border: 1px solid #ffffff33;
+  font-weight: 700; 
+  background: var(--primary-accent); /* Logo con acento magenta */
+  border: 1px solid var(--primary-dark);
+  color: #fff;
+  text-shadow: 0 0 5px rgba(255,255,255,0.5);
 }
 .brand-text { font-weight: 700; letter-spacing: .3px; }
 .burger {
@@ -78,24 +105,30 @@ body {
   display: flex; align-items: center; gap: .75rem;
   width: 100%; border: 0; background: transparent; color: #fff;
   padding: .8rem 1rem; border-radius: 12px; cursor: pointer;
-  text-align: left; transition: background .2s, transform .05s, box-shadow .2s;
+  text-align: left; transition: all .2s;
   font-weight: 500;
 }
-.menu-item:hover { background: #ffffff1a; }
+.menu-item:hover { 
+  background: rgba(0, 229, 255, 0.08); /* Brillo cian al pasar el ratón */
+  color: var(--primary);
+}
 .menu-item:active { transform: scale(.98); }
 
 .menu-item.active {
-  background: #ffffff22;
+  background: rgba(0, 229, 255, 0.1); /* Fondo cian sutil */
   font-weight: 700;
-  box-shadow: inset 4px 0 0 0 var(--primary); /* Usamos el color primario */
+  color: var(--primary); /* Texto en color neón */
+  /* Sombra de brillo neón */
+  box-shadow: inset 2px 0 0 0 var(--primary), 0 0 10px rgba(0, 229, 255, 0.3);
+  text-shadow: 0 0 5px rgba(0, 229, 255, 0.7);
 }
 
 .menu-icon { font-size: 1.1rem; width: 20px; display: grid; place-content: center; }
 .menu-text { font-weight: inherit; }
 
 .logout { margin-top: auto; padding: .5rem; }
-.menu-item.danger { background: #ff4d4f22; }
-.menu-item.danger:hover { background: #ff4d4f33; }
+.menu-item.danger { background: rgba(255, 27, 0, 0.15); color: var(--danger-neon); }
+.menu-item.danger:hover { background: rgba(255, 27, 0, 0.25); }
 
 /* Contenido */
 .content {
@@ -106,7 +139,7 @@ body {
   position: absolute; top: 1.25rem; right: 1.5rem;
   color: var(--primary);
   opacity: 0.6;
-  filter: drop-shadow(0 6px 14px rgba(91, 123, 255, 0.3));
+  filter: drop-shadow(0 0 10px var(--primary));
 }
 
 /* Encabezado */
@@ -116,6 +149,8 @@ body {
   font-weight: 700;
   letter-spacing: -0.02em;
   color: #fff; /* Título principal en blanco */
+  /* Animación de pulso neón */
+  animation: neon-text-pulse 2.5s infinite alternate;
 }
 .page-header .muted { color: var(--muted); margin: .25rem 0 1.25rem; }
 
@@ -129,9 +164,16 @@ body {
   background: var(--card-bg); /* Fondo de tarjeta oscuro */
   border-radius: var(--card-radius);
   padding: 1.25rem 1.5rem;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow); /* Sombra de brillo sutil */
   border: 1px solid var(--border-color); /* Borde sutil */
   border-left: 4px solid var(--primary);
+  transition: all 0.3s ease; /* Transición para hover */
+}
+.stat-card:hover {
+  transform: translateY(-3px);
+  /* Brillo más intenso en hover */
+  box-shadow: 0 0 15px var(--primary), 0 0 25px var(--primary-accent);
+  border-color: var(--primary);
 }
 .stat-title {
   color: var(--muted);
@@ -142,7 +184,8 @@ body {
 .stat-value {
   font-size: 2rem;
   font-weight: 700;
-  color: #fff; /* Valor en blanco brillante */
+  color: var(--primary); /* Valor en color neón */
+  text-shadow: 0 0 8px rgba(0, 229, 255, 0.5); /* Sombra de texto */
 }
 
 /* --- Panel caja MODIFICADO --- */
@@ -156,9 +199,10 @@ body {
 }
 .panel-title {
   font-weight: 700;
-  color: #fff; /* Título de panel en blanco */
+  color: var(--primary-accent); /* Título de panel en magenta */
   margin-bottom: 1rem;
   font-size: 1.1rem;
+  text-shadow: 0 0 6px var(--primary-accent);
 }
 .empty {
   color: var(--muted); 
@@ -188,56 +232,58 @@ body {
   font-weight: 600;
 }
 .table-striped tbody tr:nth-of-type(odd) {
-  background-color: rgba(255, 255, 255, 0.03); /* Franja clara sutil */
+  background-color: rgba(255, 255, 255, 0.02); /* Franja casi imperceptible */
 }
 .table-striped tbody tr:hover {
-  background-color: rgba(255, 255, 255, 0.05); /* Hover claro sutil */
+  background-color: rgba(0, 229, 255, 0.05); /* Hover cian sutil */
+  color: var(--primary);
 }
 .table .align-middle td,
 .table .align-middle th {
   vertical-align: middle;
 }
 
-/* --- BOTONES DE ACCIÓN --- */
+/* --- BOTONES DE ACCIÓN NEÓN --- */
 .btn-add, .btn-edit, .btn-delete, .btn-submit, .btn-cancel, .config-form button {
   transition: all 0.2s ease;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 700; /* Más grueso para neón */
+  padding: 8px 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 .btn-add {
-  background: #28a745;
-  color: white;
+  background: var(--success-neon);
+  color: #000; /* Texto negro para alto contraste */
   margin-bottom: 20px;
-  padding: 8px 12px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: 500;
+  box-shadow: 0 0 8px rgba(57, 255, 20, 0.5);
 }
 .btn-edit {
-  background: #ffc107;
-  color: white;
+  background: var(--warning-neon);
+  color: #000; /* Texto negro */
   padding: 6px 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
   margin-right: 5px;
-  font-weight: 500;
   font-size: 0.85rem;
+  box-shadow: 0 0 8px rgba(240, 255, 0, 0.5);
 }
 .btn-delete {
-  background: #dc3545;
-  color: white;
+  background: var(--danger-neon);
+  color: #fff; /* Texto blanco */
   padding: 6px 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
   margin-right: 5px;
-  font-weight: 500;
   font-size: 0.85rem;
+  box-shadow: 0 0 8px rgba(255, 27, 0, 0.5);
 }
-.btn-add:hover, .btn-edit:hover, .btn-delete:hover {
-  opacity: 0.85;
-  transform: translateY(-1px);
+
+.btn-add:hover, .btn-edit:hover, .btn-delete:hover, .btn-submit:hover, .config-form button:hover {
+  opacity: 1; /* Quitamos el opacity, usamos transform y shadow */
+  transform: translateY(-2px) scale(1.05); /* Efecto hover más pronunciado */
 }
+.btn-add:hover { box-shadow: 0 0 15px var(--success-neon), 0 0 25px var(--success-neon); }
+.btn-edit:hover { box-shadow: 0 0 15px var(--warning-neon), 0 0 25px var(--warning-neon); }
+.btn-delete:hover { box-shadow: 0 0 15px var(--danger-neon), 0 0 25px var(--danger-neon); }
 
 
 /* --- FORMULARIOS MODIFICADOS --- */
@@ -259,7 +305,8 @@ body {
 .form-control:focus {
   border-color: var(--primary);
   outline: 0;
-  box-shadow: 0 0 0 0.25rem rgba(91, 123, 255, 0.25);
+  /* Usamos el color --primary para el brillo de foco */
+  box-shadow: 0 0 0 0.25rem rgba(0, 229, 255, 0.25), 0 0 10px rgba(0, 229, 255, 0.3);
 }
 .form-control::placeholder {
   color: var(--muted);
@@ -309,12 +356,13 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(17, 24, 39, 0.8); /* Fondo de overlay oscuro */
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.7); /* Overlay más oscuro */
+  backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  animation: modal-fade-in 0.3s ease-out; /* Animación de aparición */
 }
 .modal-content {
   background: var(--card-bg); /* Fondo de tarjeta oscuro */
@@ -322,13 +370,14 @@ body {
   border-radius: 10px;
   width: 90%;
   max-width: 500px;
-  box-shadow: none;
-  border: 1px solid var(--border-color);
+  box-shadow: 0 0 20px rgba(255, 0, 160, 0.4); /* Sombra magenta */
+  border: 1px solid var(--primary-accent);
 }
 .modal-content h3 {
   margin-top: 0;
   margin-bottom: 20px;
   color: var(--primary-accent); /* Título del modal con acento */
+  text-shadow: 0 0 8px var(--primary-accent);
 }
 .modal-form label {
   display: block;
@@ -347,6 +396,12 @@ body {
   border-radius: 5px;
   box-sizing: border-box;
 }
+.modal-form input:focus,
+.modal-form select:focus {
+  border-color: var(--primary-accent);
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(255, 0, 160, 0.25);
+}
 .modal-actions {
   margin-top: 25px;
   display: flex;
@@ -363,9 +418,11 @@ body {
 .btn-submit {
   background: var(--primary-accent);
   color: white;
+  box-shadow: 0 0 8px var(--primary-accent);
 }
 .btn-submit:hover {
   background: var(--primary-dark);
+  box-shadow: 0 0 15px var(--primary-accent), 0 0 25px var(--primary-accent);
 }
 .btn-cancel {
   background: var(--border-color); /* Botón cancelar más sutil */
@@ -373,6 +430,7 @@ body {
 }
 .btn-cancel:hover {
   background: #4b5563; /* Un poco más claro */
+  transform: translateY(-2px);
 }
 
 /* --- CALENDARIO MODIFICADO --- */
@@ -380,7 +438,7 @@ body {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 8px;
-  padding: 0; /* Quitamos padding, el panel-card ya lo tiene */
+  padding: 0; 
   background-color: transparent;
   border-radius: 0;
   box-shadow: none;
@@ -408,23 +466,26 @@ body {
   font-weight: 600;
   color: var(--text);
   cursor: pointer;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s;
+  transition: all 0.2s ease;
   font-size: 0.9rem;
 }
 .calendar-day:hover {
   background-color: var(--border-color); /* Hover más oscuro */
   transform: scale(1.02);
-  box-shadow: none;
+  box-shadow: 0 0 10px var(--primary); /* Brillo cian */
+  border-color: var(--primary);
 }
 .calendar-day.empty {
   background-color: var(--bg); /* Fondo principal */
   border-color: #2a3442; /* Borde sutil */
   cursor: default;
+  opacity: 0.5;
 }
 .calendar-day.empty:hover {
   background-color: var(--bg);
   box-shadow: none;
   transform: none;
+  border-color: #2a3442;
 }
 
 /* --- CONFIGURACIÓN MODIFICADA --- */
@@ -447,9 +508,9 @@ body {
   font-size: 1rem;
 }
 .config-form input:focus, .config-form select:focus {
-  border-color: var(--primary);
+  border-color: var(--primary-accent);
   outline: 0;
-  box-shadow: 0 0 0 0.25rem rgba(91, 123, 255, 0.25);
+  box-shadow: 0 0 0 0.25rem rgba(255, 0, 160, 0.25);
 }
 .config-form button {
   margin-top: 20px;
@@ -460,9 +521,11 @@ body {
   border-radius: 5px;
   cursor: pointer;
   font-weight: 500;
+  box-shadow: 0 0 8px var(--primary-accent);
 }
 .config-form button:hover {
   background-color: var(--primary-dark);
+  box-shadow: 0 0 15px var(--primary-accent), 0 0 25px var(--primary-accent);
 }
 
 /* Responsive */
@@ -488,4 +551,99 @@ body {
 @media (max-width: 680px) {
   .stats-grid { grid-template-columns: 1fr; }
   .content { padding: 1rem; }
+}
+
+/* =======================================================
+   💡 SECCIÓN DE IA (Sugerencia Inteligente)
+   Compatible con tema NEON DARK
+   ======================================================= */
+
+.ia-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+  justify-content: center;
+}
+
+.ia-input {
+  flex: 1;
+  padding: 0.8rem 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--bg);
+  box-shadow: inset 0 0 5px rgba(0, 229, 255, 0.2);
+  transition: all 0.3s ease-in-out;
+}
+
+.ia-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary-accent);
+}
+
+.btn-submit {
+  background: var(--primary-accent);
+  color: white;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  padding: 0.8rem 1.4rem;
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--primary-accent);
+  transition: all 0.3s ease-in-out;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-submit:hover {
+  background: var(--primary-dark);
+  box-shadow: 0 0 20px var(--primary-accent), 0 0 40px var(--primary);
+  transform: scale(1.05);
+}
+
+.btn-submit:disabled {
+  background-color: #555;
+  color: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* 💬 Caja de respuesta IA */
+.ia-response {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+  color: var(--text);
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.15);
+  animation: modal-fade-in 0.3s ease-out;
+}
+
+.ia-response h3 {
+  color: var(--primary-accent);
+  text-shadow: 0 0 6px var(--primary-accent);
+  margin-bottom: 0.75rem;
+}
+
+.ia-response p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text);
+  white-space: pre-wrap;
+}
+
+/* ⚠️ Mensajes de error IA */
+.error-message {
+  color: var(--danger-neon);
+  background: rgba(255, 27, 0, 0.15);
+  border: 1px solid var(--danger-neon);
+  padding: 1rem;
+  border-radius: 10px;
+  margin-top: 1rem;
+  text-align: center;
+  font-weight: 600;
+  box-shadow: 0 0 10px rgba(255, 27, 0, 0.3);
 }
