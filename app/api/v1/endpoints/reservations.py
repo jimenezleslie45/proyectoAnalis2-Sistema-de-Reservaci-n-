@@ -1,5 +1,6 @@
 import datetime
-from fastapi import APRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
+
 from sqlalchemy.orm import Session
 # --- IMPORTACIONES AÑADIDAS (para Soft Delete y Análisis) ---
 from sqlalchemy import cast, Date as SQLDate, func, extract 
@@ -12,7 +13,7 @@ from app.models.reservation import Reservation as ReservationModel
 from app.db.session import get_db
 from app.api.v1.endpoints.auth import get_current_user
 
-router = APRouter(prefix="/reservations", tags=["Reservations"])
+router = APIRouter(prefix="/reservations", tags=["Reservations"])
 
 
 @router.post(
