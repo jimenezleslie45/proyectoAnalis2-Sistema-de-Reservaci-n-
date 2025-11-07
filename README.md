@@ -65,38 +65,39 @@ Ideal para automatizar decisiones de reserva.
 🧩 Estructura del Proyecto
 🧠 Backend (FastAPI)
 app/
-├── api/
-│   ├── v1/
-│   │   ├── endpoints/
-│   │   │   ├── auth.py
-│   │   │   ├── reservations.py
-│   │   │   ├── audit.py
-│   │   │   └── users.py
-│   │   ├── ai.py              # ✅ Nuevo módulo IA (GPT-4o-mini)
-│   │   └── __init__.py
-│   ├── core/
-│   ├── crud/
-│   ├── db/
-│   ├── models/
-│   ├── schemas/
-│   ├── utils/
-│   ├── main.py
-│   └── tests/
-│       ├── test_reservations.py
-│       └── test_ai.py         # ✅ Test de conexión IA (opcional)
+ ├── api/
+ │   ├── v1/
+ │   │   ├── endpoints/
+ │   │   │   ├── auth.py
+ │   │   │   ├── reservas.py
+ │   │   │   ├── audit.py
+ │   │   │   └── usuarios.py
+ │   │   ├── ai.py        # ✅ Nuevo módulo IA (GPT-4o-mini)
+ │   │   └── inicio.py
+ │   ├── núcleo/
+ │   ├── crud/
+ │   ├── db/
+ │   ├── modelos/
+ │   ├── esquemas/
+ │   ├── utilidades/
+ │   ├── main.py
+ │   └── tests/
+ │       ├── test_reservations.py
+ │       └── test_ai.py   # ✅ Test de conexión IA 
 
 💻 Frontend (React + Vite)
 app/schemas/frontend/
-├── src/
-│   ├── App.jsx
-│   ├── components/
-│   │   ├── Sidebar.jsx
-│   │   └── AISugerencia.jsx   # ✅ Nuevo componente de IA
-│   ├── assets/
-│   └── styles/
-├── public/
-├── package.json
-└── vite.config.js
+ ├── src/
+ │   ├── App.jsx
+ │   ├── components/
+ │   │   ├── Sidebar.jsx
+ │   │   └── AISugerencia.jsx   # ✅ Nuevo componente de IA
+ │   ├── assets/
+ │   └── styles/
+ ├── public/
+ ├── package.json
+ └── vite.config.js
+
 
 
 🧰 Pila tecnológica 🔸 Backend
