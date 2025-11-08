@@ -39,7 +39,7 @@ async def chat_ai(message: dict = Body(...)):
         with engine.connect() as conn:
             query = text("""
                 SELECT lab_name, reserved_by, start_time
-                FROM reservation
+                FROM reservations
                 ORDER BY start_time DESC
                 LIMIT 10
             """)
