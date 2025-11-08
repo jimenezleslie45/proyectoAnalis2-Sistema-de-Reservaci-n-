@@ -84,15 +84,10 @@ async def chat_ai(message: dict = Body(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al comunicarse con OpenAI: {str(e)}")
 
-# ==========================================================
-# 🔹 ENDPOINT OPCIONAL — SUGERENCIA RÁPIDA (sin IA)
-# ==========================================================
+
 @router.get("/sugerir")
 async def sugerir_reserva():
-    """
-    Endpoint alternativo sin conexión a OpenAI.
-    Devuelve una recomendación generada localmente.
-    """
+  
     try:
         with engine.connect() as conn:
             total = conn.execute(text("SELECT COUNT(*) FROM reservation")).scalar()
